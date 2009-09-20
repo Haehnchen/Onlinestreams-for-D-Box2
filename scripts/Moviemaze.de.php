@@ -1,6 +1,6 @@
 <?
 /*
-<changelog>nothing changed</changelog>
+<changelog>20. sept 09: is working again</changelog>
 */
 
 $links['Neues Trailer']['url']="http://rss.feedsportal.com/feed/moviemaze/trailer";
@@ -21,9 +21,9 @@ function input($url,$sub=false) {
 
 function trailer($url,$sub=false) {
 	$html=cacheurl($url);
-	preg_match_all('|<a href="/media/(.*?).flv"(?:.*?)title="(.*?)">|', $html, $matches);
+	preg_match_all('|<a href="/media/trailer/view/flash/(\d+)/"(?:.*?)title="(.*?)">|', $html, $matches);
 	foreach ($matches[1] as $key=>$row) {
-		$tmp_array['url']="http://www.moviemaze.de/media/".$matches[1][$key].".flv";
+		$tmp_array['url']="http://www.moviemaze.de/media/trailer/view/flash/".$matches[1][$key]."/";
 		$tmp_array['title']=str_replace(" als Flash ansehen","",reducehtml($matches[2][$key]));
 		$tmp_array['type']="file";
 		$out[$tmp_array['title']]=$tmp_array;
