@@ -1,0 +1,116 @@
+<?
+include("inc.php");
+
+if ($_GET['command']=="in_play") {
+	global $myconfig;
+
+	#Ausbau der anfrage:
+	#original:  /requests/status.xml?command=in_play&input=e%3A%2Fkino%2Ede%2F%20Diese%20Woche%2FNo%20Country%20for%20Old%20Men%2F%20Trailer%20No%20Country%20for%20Old%20Men%20%3Asout%3D%23transcode%7Bvcodec%3Dmp2v%2Cvb%3D2000%2Cwidth%3D704%2Cheight%3D576%2Cfps%3D25%2Cacodec%3Dmpga%2Cab%3D192%2Cchannels%3D2%7D%3Astd%7Baccess%3Dhttp%2Cmux%3Dts%2Cdst%3D%3A8083%2Fdboxstream%7D
+	#urldecode: /requests/status.xml?command=in_play&input=e:/kino.de/ Diese Woche/No Country for Old Men/ Trailer No Country for Old Men :sout=#transcode{vcodec=mp2v,vb=2000,width=704,height=576,fps=25,acodec=mpga,ab=192,channels=2}:std{access=http,mux=ts,dst=:8083/dboxstream}
+
+	#Port von der dbox2 anfrage auf den vlc port ändern, damit vlc auf einem anderen port den stream wiedergibt als apacheserver
+	  $_GET['input']=str_replace($myconfig['dboxvlcport']."/dboxstream",$myconfig['vlcport']."/dboxstream",$_GET['input']);
+#	  $_GET['input']=str_replace($myconfig['dboxvlcport']."/dboxstream","8081/dboxstream",$_GET['input']);
+
+	#trennen der Pfad- und transcodeangaben und filtern des pfades
+	  $tmp_pfad=split(" :",$_GET['input']); $pfad=$tmp_pfad[0];
+	  $pfad_array=split("/",$pfad);
+
+	#Includen des entsprechenden Scriptes passend zur anfrage; ermittelt aus dem pfad
+	#und streamadresse aus der übergeben pfadangabe abfragen
+	include($myconfig['scripts'].$pfad_array[1].".php");
+	if (isset($_GET['admin'])) { echo geturl($pfad); exit; }
+	if (isset($_GET['tv'])) {
+
+         echo '<html><body>
+playlist.flv|0|0|'.geturl($pfad).'|
+</body></html>';
+exit;
+          }
+	$url=geturl($pfad);
+
+	#Youtube/flashfile workaround: ändern der transcodewerte; dbox movieplayer unterstüzt nur sampleraten von 44100
+	#Problem mit mehreren audio Kanälen? muss noch genauer geprüft werden
+	  $_GET['input']=str_replace("channels=2","channels=1",$_GET['input']);
+	  $_GET['input']=str_replace("}:std",",samplerate=44100}:std",$_GET['input']);
+
+
+	#Ursprüngliche Anfrage Modifizieren; eintragen der streamurl;
+	$go=$myconfig['vlcplaystr'];
+	$go.="&input=".urlencode($url." ".strstr($_GET['input'],":sout="));
+
+	#workaround für vlc 0.9x
+#	file('http://127.0.0.1:'.$myconfig['vlcport']."/requests/status.xml?command=pl_empty");
+
+
+} else {
+	#alle anderen Movieplayer anfragen direkt an den VLC player weiterleiten
+	#zb die Abfrage der Abspieldauer
+	$go=$_SERVER['REQUEST_URI'];
+}
+
+#Generierte anfragen an den vlc httpserver weiterleiten und antwort ausgeben, so dass der dbox movieplayer sie auswerten kann
+#echo $go;
+#$go="/requests/status.xml?command=in_play&input=".urlencode("fake:// --fake-file C:\\stream.jpg :sout=#transcode
+#{vcodec=mpeg4,vb=1500}:duplicate{dst=display} :sout-all :sout-keep");
+#echo $go;
+  $html = implode('', file('http://127.0.0.1:'.$myconfig['vlcport'].$go));
+  echo $html;
+
+
+
+/*
+-------------------------------------------------------------------------------------
+vlc Standardanwort auf statusanfragen vom movieplayer (OK Taste während wiedergabe)
+möglich wäre hier ein erweitern der metainfo während
+der wiedergabe. zb um youtube kommentare oder trailer zusatzinfos aufzurufen.
+-------------------------------------------------------------------------------------
+echo '
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+
+<root>
+  <volume>0</volume>
+  <length>149</length>
+  <time>34</time>
+  <state>playing</state>
+  <position>23</position>
+
+  <fullscreen></fullscreen>
+  <random>0</random>
+  <loop>0</loop>
+  <repeat>0</repeat>
+  <information>
+
+
+
+      <category name="Meta-Information">
+
+          <info name="Copyright">asdasdasdasd</info>
+          <info name="Beschreibung">asdadadasd</info>
+          <info name="Titel">asdasdadasd</info>
+      </category>
+
+  </information>
+  <stats>
+    <readbytes>4653725</readbytes>
+    <inputbitrate>0.174148</inputbitrate>
+
+    <demuxreadbytes>4511593</demuxreadbytes>
+    <demuxbitrate>0.181312</demuxbitrate>
+    <decodedvideo>826</decodedvideo>
+    <displayedpictures>0</displayedpictures>
+    <lostpictures>0</lostpictures>
+    <decodedaudio>1485</decodedaudio>
+
+    <playedabuffers>0</playedabuffers>
+    <lostabuffers>0</lostabuffers>
+    <sentpackets>29370</sentpackets>
+    <sentbytes>5521560</sentbytes>
+    <sendbitrate>0.133178</sendbitrate>
+  </stats>
+
+</root>
+*/
+
+?>

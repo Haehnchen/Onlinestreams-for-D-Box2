@@ -1,0 +1,37 @@
+<?
+if (isset($_GET['tv'])) $_GET['dir']="e:".$_GET['dir'];    
+#error_reporting(E_ERROR | E_PARSE);
+$ip=$_SERVER["REMOTE_ADDR"];
+#if ($ip!="192.168.0.1" AND $ip!="192.168.0.201") exit;
+include("inc.php");
+
+
+preg_match('/\/(.*?)\//si',$_GET['dir'],$func); $func=$func[1];
+if (strlen($func)>0) {
+	include($myconfig['scripts'].$func.".php");
+
+	#komische eigenheit vom dbox browser. ab 95 zeilen braucht er eine content length im header;
+	#wenn wir gerade dabei sind, setzen wa dann halt alles was vlc sendet
+	#admincenter: um im browser was anzeigen zu können darf dort nichts mitgesendet werden.
+	$str_output=getdir();
+
+	if (isset($_GET['admin']) OR isset($_GET['tv'])) { } else  {
+		header ("Content-type: text/xml;  charset=UTF-8");
+		header ("Cache-Control: no-cache");
+		header ("Content-Length: ".strlen($str_output));
+	}
+	echo $str_output;
+	exit;
+}
+
+#erster Menüpunkt; alle Scripte im Ordner scripts einlesen und ausgeben
+#tempfile für suchfunktion löschen um neue suchanfragen hinzufügen zu können.
+if (file_exists("suche.log")) unlink("suche.log");
+$scripts=array();
+foreach (glob($myconfig['scripts']."*.php") as $filename) {
+	$f=str_replace($myconfig['scripts'],"",$filename);
+	$f=str_replace(".php","",$f);
+	$scripts[$f]['type']="directory";
+}
+echo gennavi($scripts);
+?>
