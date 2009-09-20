@@ -4,36 +4,36 @@
 <info>use csv to add searchterms</info>
 */
 $search="http://gdata.youtube.com/feeds/api/videos?vq=%string%&start-index=%index%&max-results=50&orderby=%orderby%";
-#$links['Top 10']['url']="http://gdata.youtube.com/feeds/api/standardfeeds/top_rated";
-#$links['Ich bin eine suche']['suche']="suchfunktion";
-#$links['Finde mich']['suche']="finde mich";
-#$links['suche Bundesliga']['suche']="bundesliga";
 
+#generate site objects navigations on search items
+ $seite=array();
+ for ($i=0;$i<13;$i++) $seite['Seite '.($i + 1)]['nr']=$i;
 
-$seite['Seite 1']['nr']=0;
-$seite['Seite 2']['nr']=1;
-$seite['Seite 3']['nr']=2;
-$seite['Seite 4']['nr']=3;
-$seite['Seite 5']['nr']=4;
-$seite['Seite 6']['nr']=5;
-$seite['Seite 7']['nr']=6;
-$seite['Seite 8']['nr']=7;
-$seite['Seite 9']['nr']=8;
-$seite['Seite 10']['nr']=9;
-$seite['Seite 11']['nr']=10;
-$seite['Seite 12']['nr']=11;
-$seite['Seite 13']['nr']=12;
+#generate orderby on youtube api
+ $orderby['Relevanz']['api']="relevance";
+ $orderby['Datum']['api']="updated";
+ $orderby['Zugriffe']['api']="viewCount";
+ $orderby['Bewertung']['api']="rating";
+ $orderby['Published']['api']="published";
 
-$orderby['Relevanz']['api']="relevance";
-$orderby['Datum']['api']="updated";
-$orderby['Zugriffe']['api']="viewCount";
-$orderby['Bewertung']['api']="rating";
+/**
+ * what youtube videotype should we use?
+ * MP4 has no sound on vlc 0.8 streaming!
+ * so we need fmt=5 (flv) 
+ *
+ * No &fmt = FLV (verry low)
+ * &fmt=5 = FLV (verry low) ; was default before mp4
+ * &fmt=6 = FLV (works not always)
+ * &fmt=13 = 3GP (mobile phone)
+ * &fmt=18 = MP4 (normal) ; now this is default
+ * &fmt=22 = MP4 (hd)
+ */
+$youtube_fmt=5;
 
 function dlflv($url) {
-	$page = cacheurl($url,false);
-	preg_match('|video_id": "(.*?)"(?:.*?)"t": "(.*?)"|i', $page, $matches);
-	$video ="http://www.youtube.com/get_video?video_id=".$matches[1]."&t=".$matches[2];
-	return  $video;
+	global $youtube_fmt;
+	preg_match('|=(.*?)$|i', $url, $matches);
+	return "http://".$_SERVER['SERVER_ADDR'] .":".$_SERVER['SERVER_PORT'].'/requests/scripts/inc/youtube.php?v='.$matches[1].'&fmt='.$youtube_fmt;
 }
 
 function input($url,$pos="") {
@@ -87,10 +87,7 @@ function getdir() {
 		$ur= str_replace("%index%",$index,$ur);
 		return gennavi(input($ur,implode("/",$r)));
 	}
-
-
 }
-
 
 function geturl($pfad) {
 	global $links,$search,$orderby,$seite;
@@ -112,12 +109,4 @@ function geturl($pfad) {
 	$t=stripslashes($r[3]);
 	return dlflv($in[$t]['url']);
 }
-
-#function filterstr($text) {
-#    $text = preg_replace('/[^a-zA-Z0-9\- .\!\?()]/', "", $text);
-#    $text = preg_replace("/ +/", " ", $text);
-#    $text = trim($text);
-#    return $text;
-#}
-
 ?>
