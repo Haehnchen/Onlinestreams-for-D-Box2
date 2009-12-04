@@ -40,7 +40,7 @@ exit;
 	$go.="&input=".urlencode($url." ".strstr($_GET['input'],":sout="));
 
 	#workaround für vlc 0.9x
-#	file('http://127.0.0.1:'.$myconfig['vlcport']."/requests/status.xml?command=pl_empty");
+	file('http://127.0.0.1:'.$myconfig['vlcport']."/requests/status.xml?command=pl_empty");
 
 
 } else {
