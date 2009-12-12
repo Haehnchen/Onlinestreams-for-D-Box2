@@ -1,4 +1,4 @@
-<?
+<?php
 function getdir() {
 	global $links;
 	return gennavi($links);
@@ -7,7 +7,7 @@ function getdir() {
 function geturl($pfad) {
 
 	global $links;
-	$r=split("/",$pfad);
+	$r=explode("/",$pfad);
 	return $links[$r[2]]['url'];
 }
 

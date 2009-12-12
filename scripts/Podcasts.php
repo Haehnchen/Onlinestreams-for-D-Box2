@@ -1,4 +1,4 @@
-<?
+<?php
 
 function input($url) {
 	$t_html = cacheurl($url,false);# echo $t_html;
@@ -14,7 +14,7 @@ function input($url) {
 
 function getdir() {
 	global $links;
-	$r=split("/",trim($_GET['dir'],"/"));
+	$r=explode("/",trim($_GET['dir'],"/"));
 
 	if (count($r)==2) {
 		return gennavi($links);
@@ -29,7 +29,7 @@ function getdir() {
 
 function geturl($pfad) {
 	global $links;
-	$r=split("/",trim($pfad,"/"));
+	$r=explode("/",trim($pfad,"/"));
 	$in=input($links[$r[2]]['url']);
 	$t=stripslashes($r[3]);
 	return $in[$t]['url'];

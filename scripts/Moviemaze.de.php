@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 <changelog>20. sept 09: is working again</changelog>
 */
@@ -34,7 +34,7 @@ function trailer($url,$sub=false) {
 
 function getdir() {
 	global $links;
-	$r=split("/",trim($_GET['dir'],"/"));
+	$r=explode("/",trim($_GET['dir'],"/"));
 
 	if (count($r)==2) {
 		return gennavi($links);
@@ -54,7 +54,7 @@ function getdir() {
 
 function geturl($pfad) {
 	global $links;
-	$r=split("/",trim($pfad,"/"));
+	$r=explode("/",trim($pfad,"/"));
 	$first=input($links[$r[2]]['url']);
 	$trailer=trailer($first[$r[3]]['url']);
 	$url=$trailer[$r[4]]['url'];

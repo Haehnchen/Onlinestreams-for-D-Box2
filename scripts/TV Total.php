@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 <changelog>now works with new page layout</changelog>
 */
@@ -31,7 +31,7 @@ function input($ar) {
 
 function getdir() {
 	global $links;
-	$r=split("/",trim($_GET['dir'],"/"));
+	$r=explode("/",trim($_GET['dir'],"/"));
 
 	if (count($r)==2) {
 		return gennavi($links);
@@ -65,7 +65,7 @@ function tvtotal_video_list($url) {
 
 function geturl($pfad) {
 	global $links;
-	$r=split("/",trim($pfad,"/"));
+	$r=explode("/",trim($pfad,"/"));
 		$links=input($links[$r[2]]);
                  $link=$links[$r[3]];
 		$videos=tvtotal_video_list($link['url']);

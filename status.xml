@@ -1,4 +1,4 @@
-<?
+<?php
 include("inc.php");
 
 if ($_GET['command']=="in_play") {
@@ -13,8 +13,8 @@ if ($_GET['command']=="in_play") {
 #	  $_GET['input']=str_replace($myconfig['dboxvlcport']."/dboxstream","8081/dboxstream",$_GET['input']);
 
 	#trennen der Pfad- und transcodeangaben und filtern des pfades
-	  $tmp_pfad=split(" :",$_GET['input']); $pfad=$tmp_pfad[0];
-	  $pfad_array=split("/",$pfad);
+	  $tmp_pfad=explode(" :",$_GET['input']); $pfad=$tmp_pfad[0];
+	  $pfad_array=explode("/",$pfad);
 
 	#Includen des entsprechenden Scriptes passend zur anfrage; ermittelt aus dem pfad
 	#und streamadresse aus der übergeben pfadangabe abfragen

@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 <changelog>feb09 changed many lines</changelog>
 */
@@ -26,7 +26,7 @@ function descript($url) {
 	preg_match('|<span style="line-height: 15px;">(.*?)</span>|is', $html, $matches);
 	$text=reducehtml(strip_tags($matches[1]));
 	$text=wordwrap( $text, 38, "\n" );
-	$tarr=split("\n",$text);
+	$tarr=explode("\n",$text);
 	foreach ($tarr as $txt) { $out[str_pad($i,2,0,STR_PAD_LEFT)." ".$txt]['txt']=$i." ".$txt; $i++; }
 	return $out;
 }
@@ -70,7 +70,7 @@ function trailer($url) {
 function getdir() {
 
 	global $links;
-	$r=split("/",trim($_GET['dir'],"/"));
+	$r=explode("/",trim($_GET['dir'],"/"));
 
 	if (count($r)==2) {
 		return gennavi($links);
@@ -97,7 +97,7 @@ function getdir() {
 
 function geturl($pfad) {
 	global $links;
-	$r=split("/",trim($pfad,"/"));
+	$r=explode("/",trim($pfad,"/"));
 	$first=starts($links[$r[2]]['url']);
 	$trailer=trailer($first[$r[3]]['url']);
 	return mediaplayer($trailer[$r[4]]['trailer']);

@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 <changelog>
 feb09 changed csv using
@@ -41,7 +41,7 @@ function input($url) {
 
 function getdir() {
 	global $links,$seite,$search;
-	$r=split("/",trim($_GET['dir'],"/"));
+	$r=explode("/",trim($_GET['dir'],"/"));
 
 	if (count($r)==2) {
 		return gennavi($links);
@@ -67,7 +67,7 @@ function getflv($id) {
 
 function geturl($pfad) {
 	global $links,$seite,$search;
-	$r=split("/",trim($pfad,"/"));
+	$r=explode("/",trim($pfad,"/"));
 	$tag=$links[$r[2]]['suche'];
 	$in=input($links[$r[2]]['url']);
 	$url=str_replace("%tag%",$tag,$search);

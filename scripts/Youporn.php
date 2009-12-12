@@ -1,4 +1,4 @@
-<?
+<?php
 exit; #remove if you are > 18 :)
 
 $links['home']['url']="http://www.youporn.com/?page=1";
@@ -46,7 +46,7 @@ function input($url,$pos="") {
 
 function getdir() {
 	global $links,$orderby,$search,$seite;
-	$r=split("/",trim($_GET['dir'],"/"));
+	$r=explode("/",trim($_GET['dir'],"/"));
 
 	if (count($r)==2) {
 		return gennavi($links);
@@ -80,7 +80,7 @@ function getdir() {
 
 function geturl($pfad) {
 	global $links,$search,$orderby,$seite;
-	$r=split("/",trim($pfad,"/"));
+	$r=explode("/",trim($pfad,"/"));
 
 	#youtube suche
 	if(count($r)==6) {

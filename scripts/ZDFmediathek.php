@@ -16,7 +16,7 @@ $char_links[]="http://www.zdf.de/ZDFmediathek/xmlservice/web/sendungenAbisZ?char
 $char_links[]="http://www.zdf.de/ZDFmediathek/xmlservice/web/sendungenAbisZ?characterRangeStart=0-9&characterRangeEnd=0-9&detailLevel=2";
 
 function getdir() {
-	$r=split("/",trim($_GET['dir'],"/"));
+	$r=explode("/",trim($_GET['dir'],"/"));
 
 	if (count($r)==2) {
 		return gennavi(find_shows());
@@ -32,7 +32,7 @@ function getdir() {
 
 
 function geturl($pfad) {
-		$r=split("/",trim($pfad,"/"));
+		$r=explode("/",trim($pfad,"/"));
 		$shows=find_shows();
 		$rss_items=show_rss_items($shows[$r[2]]['assetId']);
 		$show_item=$rss_items[$r[3]];

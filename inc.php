@@ -1,4 +1,4 @@
-<?
+<?php
 #time to cache httprequests
 $myconfig['cachetime']=1800;
 
@@ -190,7 +190,7 @@ function getCSV() {
 	                  $scrName=strtolower($data[0]);
 			  #split the multiscript csv row
 	                  if (strpos($scrName,",")>0) {
-	                          $spStr=split(",", $scrName);
+	                          $spStr=explode(",", $scrName);
 				  if($tmpAr['type']=="search") $tmpAr['suche']=$tmpAr['url'];
 	                          foreach($spStr as $spScr) $backAr[$spScr][$data[1]]=$tmpAr;
 	                  } else {
@@ -212,7 +212,7 @@ function showText($text,$killHtml=false) {
 	if ($killHtml==true) $text=reducehtml($text);
 
 	$text=wordwrap( $text, 38, "\n" );
-	$tarr=split("\n",$text);
+	$tarr=explode("\n",$text);
 	foreach ($tarr as $txt) {
 		if (strlen($txt) >0 ) $out[str_pad($i,2,0,STR_PAD_LEFT)." ".$txt]['txt']=$i." ".$txt; $i++;
 	}
@@ -221,9 +221,9 @@ function showText($text,$killHtml=false) {
 
 function getScriptName() {
 	if (isset($_GET['dir'])) {
-	$temp= split("/",trim($_GET['dir'],"/"));
+	$temp= explode("/",trim($_GET['dir'],"/"));
 	} else {
-	$temp= split("/",trim($_GET['input'],"/"));
+	$temp= explode("/",trim($_GET['input'],"/"));
 	}
 	return $temp[1];
 }
@@ -344,7 +344,7 @@ function read() {
 	if (isset($url['query'])) { $query="?".$url['query']; } else { $query=""; }
 
 	if (strlen($this->proxy)>0) {
-	$s=split(":",$this->proxy);
+	$s=explode(":",$this->proxy);
 		@$fp = fsockopen ($s[0], $s[1], $errno, $errstr, $this->timout);
 	} else { @$fp = fsockopen ($url['host'], $port, $errno, $errstr, $this->timout); }
 
@@ -420,12 +420,12 @@ function get_cookies()
 
 					$headline = trim($headline);
 					$headline = preg_replace("/^Set-Cookie: /i", "", $headline);
-					$cookiesplit = split(";",$headline);
+					$cookiesplit = explode(";",$headline);
 
 					#$cookieinfo = array();
 
 					// avr und value
-					list($cookieinfo['name'],$cookieinfo['value']) = split("=",$cookiesplit[0],2);
+					list($cookieinfo['name'],$cookieinfo['value']) = explode("=",$cookiesplit[0],2);
 
 					// zeit als timestamp
 					if ( $cookiesplit[1]) {

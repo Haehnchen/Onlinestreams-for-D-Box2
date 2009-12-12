@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 <changelog>
 no changes made
@@ -24,7 +24,7 @@ function getdir() {
 }
 
 function geturl($pfad) {
-	$r=split("/",$pfad);
+	$r=explode("/",$pfad);
 	$in=input();
 	return $in[$r[2]]['url'];
 }

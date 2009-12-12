@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 <changelog>fixed: searching dec 09</changelog>
 <info>use csv to add searchterms</info>
@@ -16,7 +16,7 @@ $orderby['Bewertung']['api']="2";
 
 function getdir() {
 	global $links,$orderby;
-	$r=split("/",trim($_GET['dir'],"/"));
+	$r=explode("/",trim($_GET['dir'],"/"));
 
 	if (count($r)==2) {
 		return gennavi($links);
@@ -44,7 +44,7 @@ function getdir() {
 
 function geturl($pfad) {
 	global $links,$orderby;
-	$r=split("/",trim($pfad,"/"));
+	$r=explode("/",trim($pfad,"/"));
 
 	#check if we are searching
 	if(count($r)==6) {

@@ -1,4 +1,4 @@
-<?
+<?php
 if (!isset($_GET['v'])) return '';
 
 $url=isset($_GET['fmt']) ?  YoutubeVideoUrl($_GET['v'],$_GET['fmt']) : YoutubeVideoUrl($_GET['v']);

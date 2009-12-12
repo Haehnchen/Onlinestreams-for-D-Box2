@@ -1,4 +1,4 @@
-<?
+<?php
 /*
 <changelog>no changes since last release</changelog>
 */
@@ -20,7 +20,7 @@ function getdir() {
 }
 
 function geturl($pfad) {
-	$r=split("/",$pfad);
+	$r=explode("/",$pfad);
 	$in=input();
 	return $in[$r[2]]['url'];
 }
