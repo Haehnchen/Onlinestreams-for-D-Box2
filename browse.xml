@@ -15,7 +15,7 @@ if (strlen($func)>0) {
 	#admincenter: um im browser was anzeigen zu können darf dort nichts mitgesendet werden.
 	$str_output=getdir();
 
-	if (isset($_GET['admin']) OR isset($_GET['tv'])) { } else  {
+	if (isset($_GET['admin']) OR isset($_GET['tv']) OR isset($_GET['vlc'])) { } else  {
 		header ("Content-type: text/xml;  charset=UTF-8");
 		header ("Cache-Control: no-cache");
 		header ("Content-Length: ".strlen($str_output));

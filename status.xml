@@ -19,15 +19,20 @@ if ($_GET['command']=="in_play") {
 	#Includen des entsprechenden Scriptes passend zur anfrage; ermittelt aus dem pfad
 	#und streamadresse aus der übergeben pfadangabe abfragen
 	include($myconfig['scripts'].$pfad_array[1].".php");
-	if (isset($_GET['admin'])) { echo geturl($pfad); exit; }
-	if (isset($_GET['tv'])) {
-
-         echo '<html><body>
-playlist.flv|0|0|'.geturl($pfad).'|
-</body></html>';
-exit;
-          }
 	$url=geturl($pfad);
+	
+	#admin interface
+	if (isset($_GET['admin'])) { echo $url; exit; }
+	
+	#playback for pophournhour
+	if (isset($_GET['tv'])) { echo '<html><body>\r\nplaylist.flv|0|0|'.$url.'|\r\n</body></html>'; exit; }
+	
+	#VLC playback with activex control in browser
+	if (isset($_GET['vlc'])) { echo $url.'<br><OBJECT classid="clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921" codebase="http://downloads.videolan.org/pub/videolan/vlc/latest/win32/axvlc.cab" width="640" height="480" id="vlc" events="True">
+								<param name="Src" value="'.$url.'" /><param name="ShowDisplay" value="True" /><param name="AutoLoop" value="False" /><param name="AutoPlay" value="true" /></OBJECT>'; exit; }	
+	
+	
+
 
 	#Youtube/flashfile workaround: ändern der transcodewerte; dbox movieplayer unterstüzt nur sampleraten von 44100
 	#Problem mit mehreren audio Kanälen? muss noch genauer geprüft werden

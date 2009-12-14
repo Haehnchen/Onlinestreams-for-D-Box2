@@ -49,6 +49,7 @@ function cacheurl($url,$browser_req=true,$cookies="",$browser="Firefox") {
 function gennavi($arr) {
 	$back="";
 	if (isset($_GET['tv'])) { return genPopcournHour($arr); }
+	if (isset($_GET['vlc'])) { return genPopcournHour($arr,'vlc'); }	
 	if (isset($_GET['admin'])) { return genBrowserDebug($arr); }
 
 	return genDbox2($arr);
@@ -90,7 +91,7 @@ return $back;
 }
 
 
-function genPopcournHour($arr) {
+function genPopcournHour($arr,$typ='tv') {
 		$back="
 
 <html>
@@ -126,10 +127,10 @@ function genPopcournHour($arr) {
 			if (strlen($r['time'])==0) $r['time']="0";
 
 			if ($r['type']=="file") {
-				$back.= '<a href="/requests/status.xml?command=in_play&input='.trim($_GET['dir'],"/").'%2F'.$key.'&tv" vod="playlist">'.$key.'</a><br>';
+				$back.= '<a href="/requests/status.xml?command=in_play&input='.trim($_GET['dir'],"/").'%2F'.$key.'&'.$typ.'" vod="playlist">'.$key.'</a><br>';
 			} else {
 				$r['type']="directory";
-				$back.= '<a href="'.$_SERVER['PHP_SELF']."?dir=".trim($_GET['dir'],"/").'%2F'.$key.'%2F&tv">'.$key.'</a><br>';
+				$back.= '<a href="'.$_SERVER['PHP_SELF']."?dir=".trim($_GET['dir'],"/").'%2F'.$key.'%2F&'.$typ.'">'.$key.'</a><br>';
 			}
 		}
 return $back."</h2>
