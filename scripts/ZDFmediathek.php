@@ -15,6 +15,10 @@ $char_links[]="http://www.zdf.de/ZDFmediathek/xmlservice/web/sendungenAbisZ?char
 $char_links[]="http://www.zdf.de/ZDFmediathek/xmlservice/web/sendungenAbisZ?characterRangeStart=T&characterRangeEnd=V&detailLevel=2";
 $char_links[]="http://www.zdf.de/ZDFmediathek/xmlservice/web/sendungenAbisZ?characterRangeStart=0-9&characterRangeEnd=0-9&detailLevel=2";
 
+#overwrite videotype
+ $video_type=1;
+ if (isset($myconfig['ZDFmediathek']['type'])) $video_type=$myconfig['ZDFmediathek']['type'];
+
 function getdir() {
 	$r=explode("/",trim($_GET['dir'],"/"));
 
@@ -32,13 +36,14 @@ function getdir() {
 
 
 function geturl($pfad) {
+		global $video_type;
 		$r=explode("/",trim($pfad,"/"));
 		$shows=find_shows();
 		$rss_items=show_rss_items($shows[$r[2]]['assetId']);
 		$show_item=$rss_items[$r[3]];
 		
 		#for lower version str_replace("veryhigh","300",$show_item['urls'][1])
-		return $show_item['urls'][1]; #[0]=mov; [1]=asx
+		return $show_item['urls'][$video_type]; #[0]=mov; [1]=asx
 }
 
 /**

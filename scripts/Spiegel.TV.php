@@ -13,6 +13,9 @@ $links['Politik und Wirtschaft']['url']="http://www1.spiegel.de/active/playlist/
 $links['Aktuell']['url']="http://www1.spiegel.de/active/playlist/fcgi/playlist.fcgi/asset=flashvideo/mode=list/displaycategory=aktuell2/start=1/count=24";
 $links['Top20']['url']="http://www1.spiegel.de/active/playlist/fcgi/playlist.fcgi/asset=flashvideo/mode=toptwenty";
 
+#overwrite videotype
+ $video_type=4;
+ if (isset($myconfig['Spiegel.TV']['type'])) $video_type=$myconfig['Spiegel.TV']['type'];
 
 function input($url) {
 	$t_html = cacheurl($url);
@@ -42,12 +45,12 @@ function getdir() {
 }
 
 function geturl($pfad) {
-	global $links;
+	global $links,$video_type;
 	$r=explode("/",trim($pfad,"/"));
 	$in=input($links[$r[2]]['url']);
 	$t=stripslashes($r[3]);
 
-	return spiegeltv_getvideo_url($in[$t]['videoid']);
+	return spiegeltv_getvideo_url($in[$t]['videoid'],$video_type);
 }
 
 /**

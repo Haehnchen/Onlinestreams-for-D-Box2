@@ -28,7 +28,10 @@ $search="http://gdata.youtube.com/feeds/api/videos?vq=%string%&start-index=%inde
  * &fmt=18 = MP4 (normal) ; now this is default
  * &fmt=22 = MP4 (hd)
  */
-$youtube_fmt=5;
+ 
+#overwrite videotype 
+ $youtube_fmt=5;
+ if (isset($myconfig['Youtube']['type'])) $youtube_fmt=$myconfig['Youtube']['type'];
 
 function dlflv($url) {
 	global $youtube_fmt;

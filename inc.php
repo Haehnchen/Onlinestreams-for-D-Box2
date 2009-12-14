@@ -1,18 +1,5 @@
 <?php
-#time to cache httprequests
-$myconfig['cachetime']=1800;
-
-#subfolder
-$myconfig['scripts']="scripts/";
-
-#port of the vlc web interface
-  $myconfig['vlcport']="8080";
-
-#Port auf der Dbox2 bzw. port des Apacheservers; Standard = 8083
-  $myconfig['dboxvlcport']=$_SERVER['SERVER_PORT'];
-
-#VLC string zum starten des transcoden - NICHT ÄNDERN!!!!!!!
-  $myconfig['vlcplaystr']="/requests/status.xml?command=in_play";
+include('settings.php');
 
 
 #read CSV-File
