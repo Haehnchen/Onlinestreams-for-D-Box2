@@ -15,7 +15,7 @@ $orderby['Bewertung']['api']="2";
 
 
 function getdir() {
-	global $links,$orderby;
+	global $links,$orderby,$seite;
 	$r=explode("/",trim($_GET['dir'],"/"));
 
 	if (count($r)==2) {
