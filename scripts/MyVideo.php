@@ -6,7 +6,7 @@
 
 $search='http://www.myvideo.de/Videos_A-Z?lpage=%page%&searchWord=%string%&searchOrder=%orderby%';
 
-for ($i=0;$i<13;$i++) $seite['Seite '.($i + 1)]['nr']=$i;
+for ($i=0;$i<13;$i++) $seite['Seite '.($i + 1)]['nr']=$i+1;
 
 $orderby['Relevanz']['api']="0";
 $orderby['Datum']['api']="1";
@@ -36,6 +36,7 @@ function getdir() {
 	}
 
 	if (count($r)==5) {
+		$page=$seite[$r[4]]['nr'];
 		$ar=$links[$r[2]];
 		$ar=myvideo_search_input(urlencode($ar['suche']),$page,$orderby[$r[3]]['api']);
 		return gennavi($ar);
@@ -122,7 +123,6 @@ function myvideo_search_input($string,$page=0,$orderby=0) {
 	$url= str_replace("%string%",urlencode($string),$search);
 	$url= str_replace("%orderby%",$orderby,$url);
 	$url= str_replace("%page%",$page,$url);
-
 	$t_html = cacheurl($url);
 	$out=array();
 	preg_match_all("|<span class='title'>(.*?)</span>|si",$t_html,$row);
