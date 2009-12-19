@@ -1,4 +1,5 @@
 <?php
+// $Id$
 if (isset($_GET['tv'])) $_GET['dir']="e:".$_GET['dir'];    
 #error_reporting(E_ERROR | E_PARSE);
 $ip=$_SERVER["REMOTE_ADDR"];
