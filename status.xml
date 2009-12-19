@@ -1,4 +1,5 @@
 <?php
+// $Id$
 include("inc.php");
 
 if ($_GET['command']=="in_play") {
@@ -9,8 +10,10 @@ if ($_GET['command']=="in_play") {
 	#urldecode: /requests/status.xml?command=in_play&input=e:/kino.de/ Diese Woche/No Country for Old Men/ Trailer No Country for Old Men :sout=#transcode{vcodec=mp2v,vb=2000,width=704,height=576,fps=25,acodec=mpga,ab=192,channels=2}:std{access=http,mux=ts,dst=:8083/dboxstream}
 
 	#Port von der dbox2 anfrage auf den vlc port ändern, damit vlc auf einem anderen port den stream wiedergibt als apacheserver
-	  $_GET['input']=str_replace($myconfig['dboxvlcport']."/dboxstream",$myconfig['vlcport']."/dboxstream",$_GET['input']);
+	#default: http://ip:8083/dboxstream -> http://ip:8080/dboxstream
+#	  $_GET['input']=str_replace($myconfig['dboxvlcport']."/dboxstream",$myconfig['vlcport']."/dboxstream",$_GET['input']);
 #	  $_GET['input']=str_replace($myconfig['dboxvlcport']."/dboxstream","8081/dboxstream",$_GET['input']);
+	$_GET['input']=str_replace($myconfig['dboxvlcport'].'/dboxstream',$myconfig['ApacheProxyPassPort'].'/dboxstream',$_GET['input']);
 
 	#trennen der Pfad- und transcodeangaben und filtern des pfades
 	  $tmp_pfad=explode(" :",$_GET['input']); $pfad=$tmp_pfad[0];
