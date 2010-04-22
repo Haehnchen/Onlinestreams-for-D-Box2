@@ -3,7 +3,7 @@
 <changelog>feb09 using standard htmlfilter</changelog>
 <info>use csv to add searchterms</info>
 */
-$search="http://gdata.youtube.com/feeds/api/videos?vq=%string%&start-index=%index%&max-results=50&orderby=%orderby%";
+$search="http://gdata.youtube.com/feeds/api/videos?vq=%string%&start-index=%index%&max-results=50&orderby=%orderby%%time%";
 
 #generate site objects navigations on search items
  $seite=array();
@@ -11,6 +11,8 @@ $search="http://gdata.youtube.com/feeds/api/videos?vq=%string%&start-index=%inde
 
 #generate orderby on youtube api
  $orderby['Relevanz']['api']="relevance";
+ $orderby['Relevanz-Month']['api']="relevance";
+ $orderby['Relevanz-Week']['api']="relevance"; 
  $orderby['Datum']['api']="updated";
  $orderby['Zugriffe']['api']="viewCount";
  $orderby['Bewertung']['api']="rating";
@@ -88,6 +90,11 @@ function getdir() {
 		$ur= str_replace("%string%",urlencode($ar['suche']),$search);
 		$ur= str_replace("%orderby%",$orderby[$r[3]]['api'],$ur);
 		$ur= str_replace("%index%",$index,$ur);
+		
+		#youtube api: search video within the specified time
+		#we only need this_week and this_month
+		$ur= (preg_match('/month|week/i',$r[3],$match)) ? str_replace('%time%','&time=this_'.strtolower($match[0]),$ur) : $ur=str_replace('%time%','',$ur);
+	
 		return gennavi(input($ur,implode("/",$r)));
 	}
 }
@@ -102,6 +109,11 @@ function geturl($pfad) {
 		$ur= str_replace("%string%",urlencode($links[$r[2]]['suche']),$search);
 		$ur= str_replace("%orderby%",$orderby[$r[3]]['api'],$ur);
 		$ur= str_replace("%index%",$index,$ur);
+		
+		#youtube api: search video within the specified time
+		#we only need this_week and this_month
+		$ur= (preg_match('/month|week/i',$r[3],$match)) ? str_replace('%time%','&time=this_'.strtolower($match[0]),$ur) : $ur=str_replace('%time%','',$ur);
+		
 		$ar=input($ur,implode("/",$r));
 		d_write("fav/".md5(implode("/",$r))," ");
 		$key=$r[5]; if (!isset($ar[$key])) $key=substr($key,1);
