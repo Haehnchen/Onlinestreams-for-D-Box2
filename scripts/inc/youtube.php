@@ -8,13 +8,27 @@ header("Location: ".$url);
 #works very good!
 /**
  * Get download URL of Youtube video
- * http://www.longtailvideo.com/support/forum/General-Chat/18570/-Solution-Youtube-Get-Video
+ * http://stackoverflow.com/questions/3311795/youtube-video-download-url (since 2010/07)
+ * http://www.longtailvideo.com/support/forum/General-Chat/18570/-Solution-Youtube-Get-Video (old)
  *
  * @param youtube video id $videoid
  * @param videotype $fmt
  * @return download url
  */
 function YoutubeVideoUrl($videoid,$fmt=5) {
+
+	$content = file_get_contents("http://www.youtube.com/get_video_info?video_id={$videoid}");
+	preg_match('|&token\=(.*?)&|is', $content, $matches);
+	$token = $matches[1];
+	$url = "http://www.youtube.com/get_video?video_id={$videoid}&t={$token}&fmt={$fmt}&asv=2";
+	$headers = get_headers($url,1);
+	if (is_array($headers['Location'])) {
+		return $headers['Location'][0];
+	} else {
+		return $headers['Location'];
+	}
+
+
 	parse_str(file_get_contents("http://youtube.com/get_video_info?video_id={$videoid}"),$i);
 	if($i['status'] == 'fail' && $i['errorcode'] == '150') {
 		$content = file_get_contents("http://www.youtube.com/watch?v={$videoid}");
