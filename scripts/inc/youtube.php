@@ -8,6 +8,7 @@ header("Location: ".$url);
 #works very good!
 /**
  * Get download URL of Youtube video
+ * Using same parser as keepvid (java) (since 2010/12)
  * http://stackoverflow.com/questions/3311795/youtube-video-download-url (since 2010/07)
  * http://www.longtailvideo.com/support/forum/General-Chat/18570/-Solution-Youtube-Get-Video (old)
  *
@@ -15,46 +16,31 @@ header("Location: ".$url);
  * @param videotype $fmt
  * @return download url
  */
-function YoutubeVideoUrl($videoid,$fmt=5) {
+function YoutubeVideoUrl($videoid, $fmt=5) {
 
-	$content = file_get_contents("http://www.youtube.com/get_video_info?video_id={$videoid}");
-	preg_match('|&token\=(.*?)&|is', $content, $matches);
-	$token = $matches[1];
-	$url = "http://www.youtube.com/get_video?video_id={$videoid}&t={$token}&fmt={$fmt}&asv=2";
-	$headers = get_headers($url,1);
-	if (is_array($headers['Location'])) {
-		return $headers['Location'][0];
-	} else {
-		return $headers['Location'];
-	}
+  $content = file_get_contents("http://www.youtube.com/get_video_info?video_id={$videoid}");
+	
+	
+  preg_match('|&fmt_url_map\=(.*?)&|is', $content, $matches);
+  $raw_urls = array_map('urldecode', explode("%2C", $matches[1]));
+	
+  $fmt_links = array();
+  foreach($raw_urls as $link) {
+    $t = explode('|', $link);
 
+    $fmt_links[$t[0]] = array (
+      'fmt' => $t[0],
+      'url' => $t[1],
+    );
+  }
 
-	parse_str(file_get_contents("http://youtube.com/get_video_info?video_id={$videoid}"),$i);
-	if($i['status'] == 'fail' && $i['errorcode'] == '150') {
-		$content = file_get_contents("http://www.youtube.com/watch?v={$videoid}");
+  // return wanted fmt
+  if (isset($fmt_links[$fmt])) return $fmt_links[$fmt]['url'];
 
-		preg_match_all ("/(\\{.*?\\})/is", $content, $matches);
-		$obj = json_decode($matches[0][1]);
-
-		$token = $obj->{'t'};
-		$fmt_url_map = $obj->{'fmt_url_map'};
-	} elseif ($i['status'] == 'fail' && $i['errorcode'] != '150') {
-		return '';
-		#die("Fail, Errorcode: {$i['errorcode']} , Reason: {$i['reason']}");
-	} else {
-		$token = $i['token'];
-		$fmt_url_map = $i['fmt_url_map'];
-	}
-	$url = "http://www.youtube.com/get_video.php?video_id={$videoid}&vq=2&fmt={$fmt}&t={$token}";
-	$headers = get_headers($url,1);
-	$video = $headers['Location'];
-	if(!isset($video)) {
-		preg_match ("/((?:http|https)(?::\\/{2}[\\w]+)(?:[\\/|\\.]?)(?:[^\\s\"]*))/is", $fmt_url_map, $matches);
-		$video = explode(',', $matches[0]); $video = $video[0];
-	}
-	#some times array?
-	if (is_array($video)) return $video[0];
-	return $video;
+  // fmt not found use first one	
+  asort($fmt_links);
+  $ret = current($fmt_links);
+  return $ret['url'];
 }
 
 #----------------------------------------------------------
@@ -145,5 +131,4 @@ function YoutubeVideoUrl($videoid,$fmt=5) {
 	 if(@file_get_contents($url, FALSE, NULL, 0, 0) === false) return false;
 	 return true;
 	}
-
 ?>
