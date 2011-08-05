@@ -20,17 +20,28 @@ function YoutubeVideoUrl($videoid, $fmt=5) {
 
   $content = file_get_contents("http://www.youtube.com/get_video_info?video_id={$videoid}");
 	
-	
-  preg_match('|&fmt_url_map\=(.*?)&|is', $content, $matches);
+  
+  preg_match('|&url_encoded_fmt_stream_map\=(.*?)&|is', $content, $matches);
   $raw_urls = array_map('urldecode', explode("%2C", $matches[1]));
-	
+
   $fmt_links = array();
   foreach($raw_urls as $link) {
+
+    parse_str($link, $output);
+    
+    /*
+    [url] => http://...
+    [quality] => medium
+    [fallback_host] => tc.v21.cache5.c.youtube.com
+    [type] => video/mp4; codecs="avc1.42001E, mp4a.40.2"
+    [itag] => 18
+    */
+
     $t = explode('|', $link);
 
-    $fmt_links[$t[0]] = array (
-      'fmt' => $t[0],
-      'url' => $t[1],
+    $fmt_links[$output['itag']] = array (
+      'fmt' => $output['itag'],
+      'url' => urldecode($output['url']),
     );
   }
 
